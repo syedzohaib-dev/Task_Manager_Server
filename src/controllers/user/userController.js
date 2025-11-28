@@ -133,6 +133,51 @@ export const getAllUsers = asyncHandler(async (req, res) => {
 });
 
 
+export const editUser = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { fullName, title, role, profileImgURL } = req.body;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        throw new ApiError(400, errors.array().map((err) => err.msg));
+    }
+
+    const updateUser = await User.findByIdAndUpdate(
+        id,
+        {
+            fullName,
+            title,
+            role,
+            profileImgURL
+        },
+        { new: true }
+    )
+
+    if (!updateUser) {
+        throw new ApiError(404, 'User not found')
+    }
+
+    res.status(200).json(
+        new Apiresponse(200, updateUser, "User edit succeccfully")
+    )
+
+})
+
+export const deleteUser = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const user = await User.findById(id)
+    if (!user) {
+        throw new ApiError(404, "User not found")
+    }
+
+    await User.findByIdAndDelete(id)
+
+    return res.status(200).json(
+        new Apiresponse(200, user, "User delete successfull")
+    )
+})
+
 export const sendOTP = asyncHandler(async (req, res) => {
     const { email } = req.body;
 
@@ -188,3 +233,19 @@ export const verifyOTP = asyncHandler(async (req, res) => {
         new Apiresponse(200, {}, "OTP verified successfully")
     );
 });
+
+export const uploadProfile = asyncHandler(async (req, res) => {
+    upload.single("image"), async (req, res) => {
+        if (!req.file) {
+            throw new ApiError(400, "No file uploaded");
+        }
+        const base64Data = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+        const result = await cloudinary.uploader.upload(base64Data, {
+            folder: "user_profiles",
+        });
+
+        return res.status(200).json(
+            new Apiresponse(200, { imageUrl: result.secure_url }, "Image uploaded successfully")
+        )
+    }
+})

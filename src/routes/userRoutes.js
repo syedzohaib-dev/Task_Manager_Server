@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { getAllUsers, getUser, login, logout, sendOTP, signup, verifyOTP } from "../controllers/auth/authController.js";
+import { deleteUser, editUser, getAllUsers, getUser, login, logout, sendOTP, signup, uploadProfile, verifyOTP } from "../controllers/user/userController.js";
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
 
@@ -35,6 +35,17 @@ router.post(
     ],
     sendOTP);
 router.post("/verifyotp", verifyOTP);
+
+router.put("/edituser/:id",
+    [
+        body("fullName").notEmpty().withMessage("Full name is required"),
+        body("title").notEmpty().withMessage("Title is required"),
+        body("role").optional().isIn(["admin", "user"]).withMessage("Role must be admin or user")
+    ],
+    protect, editUser)
+
+router.delete("/deleteuser/:id", protect, deleteUser)
+router.delete("/uploadprofile", protect, uploadProfile)
 
 router.post("/logout", protect, logout)
 

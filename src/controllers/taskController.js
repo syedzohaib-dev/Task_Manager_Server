@@ -136,7 +136,6 @@ export const deleteTask = asyncHandler(async (req, res) => {
 
 })
 
-
 export const moveToTrash = asyncHandler(async (req, res) => {
     const { id } = req.params;
 
@@ -184,6 +183,7 @@ export const duplicateTask = asyncHandler(async (req, res) => {
     }
 
     let copy = oldTask.toObject();
+    copy.taskData = `${oldTask.taskData} (copy)`
 
     delete copy._id;
     delete copy.createdAt;
@@ -215,8 +215,6 @@ export const addActivity = asyncHandler(async (req, res) => {
     return res.status(200).json(
         new Apiresponse(200, task, "Activity added")
     )
-
-
 })
 
 // get ke controller
@@ -234,8 +232,6 @@ export const getTask = asyncHandler(async (req, res) => {
 })
 
 export const getAllTask = asyncHandler(async (req, res) => {
-    const { id } = req.params;
-
     const task = await Task.find()
     if (!task) {
         throw new ApiError(404, "Tasks not found")
@@ -243,5 +239,5 @@ export const getAllTask = asyncHandler(async (req, res) => {
     return res.status(200).json(
         new Apiresponse(200, task, "All tasks fetch successfull")
     )
-
 })
+
