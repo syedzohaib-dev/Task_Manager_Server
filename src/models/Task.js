@@ -11,19 +11,22 @@ const taskSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-
+ 
     assignTaskTo: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
+            _id: false,
+            userId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+                required: true,
+            },
         }
     ],
 
     taskStage: {
         type: String,
-        enum: ["todo", "inProgress", "completed"],
-        default: "todo",
+        enum: ["ToDo", "InProgress", "Completed"],
+        default: "ToDo",
     },
 
     taskData: {
@@ -33,8 +36,8 @@ const taskSchema = new mongoose.Schema({
 
     priorityLevel: {
         type: String,
-        enum: ["high", "medium", "normal"],
-        default: "normal",
+        enum: ["High", "Medium", "Normal"],
+        default: "Normal",
     },
 
     assetsFile: {
@@ -67,7 +70,26 @@ const taskSchema = new mongoose.Schema({
             status: String,
             message: String,
             createdAt: Date,
-            createdBy: mongoose.Schema.Types.ObjectId
+            createdBy: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            }
+        }
+    ],
+    subTasks: [
+        {
+            taskTitle: String,
+            date: String,
+            tag: String,
+            isCompleted: {
+                type: Boolean,
+                default: false
+            },
+            createdBy: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            },
+            createdAt: Date
         }
     ]
 

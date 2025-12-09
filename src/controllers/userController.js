@@ -2,7 +2,7 @@ import { ApiError } from "../utils/apiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Apiresponse } from "../utils/apiResponse.js";
 import { validationResult } from "express-validator";
-import User from "../models/User.js";
+import { User } from "../models/User.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import cloudinary from '../config/cloudinary.js';
 
@@ -20,17 +20,11 @@ export const getUser = asyncHandler(async (req, res) => {
 
 
 export const logout = asyncHandler(async (req, res) => {
+    const userId = req.user?.id;
 
-    // user ka id token middleware se milta hai
-    const userId = req.user._id;
-
-    // isActive ko false kar do
-    await User.findByIdAndUpdate(userId, {
-        isActive: false
-    });
-
-    // Optional: cookie remove karna ho to
-    // res.clearCookie("token");
+    await User.findByIdAndUpdate(userId,
+        { isActive: false }
+    );
 
     return res.status(200).json(
         new Apiresponse(
@@ -75,7 +69,6 @@ export const editUser = asyncHandler(async (req, res) => {
             fullName,
             title,
             role,
-            profileImgURL
         },
         { new: true }
     )
@@ -164,6 +157,8 @@ export const verifyOTP = asyncHandler(async (req, res) => {
 export const uploadProfile = asyncHandler(async (req, res) => {
 
     console.log(req.file);
+    const { id } = req.params;
+    const user = await User.findById(id);
 
     if (!req.file) {
         throw new ApiError(400, "No file uploaded");
@@ -172,9 +167,11 @@ export const uploadProfile = asyncHandler(async (req, res) => {
     const result = await cloudinary.uploader.upload(base64Data, {
         folder: "user_profiles",
     });
+    user.profileImgURL = result.secure_url
+    await user.save()
 
     return res.status(200).json(
         new Apiresponse(200, { imageUrl: result.secure_url }, "Image uploaded successfully")
     )
 
-})
+}) 

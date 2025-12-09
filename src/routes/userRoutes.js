@@ -1,5 +1,15 @@
 import { body } from "express-validator";
-import { deleteUser, editUser, getAllUsers, getUser, logout, sendOTP, uploadProfile, verifyOTP } from "../controllers/userController.js";
+import {
+    deleteUser,
+    editUser,
+    getAllUsers,
+    getUser,
+    logout,
+    sendOTP,
+    uploadProfile,
+    verifyOTP
+} from "../controllers/userController.js";
+
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
 import upload from "../middleware/multerMiddleware.js";
@@ -30,7 +40,7 @@ router.put("/edituser/:id",
 
 router.delete("/deleteuser/:id", protect, deleteUser);
 
-router.post("/uploadprofile", protect, upload.single("image"), uploadProfile);
+router.post("/uploadprofile/:id", protect, upload.single("image"), uploadProfile);
 
 router.post("/logout", protect, logout);
 

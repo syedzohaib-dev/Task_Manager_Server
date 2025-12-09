@@ -2,7 +2,7 @@ import { ApiError } from "../utils/apiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Apiresponse } from "../utils/apiResponse.js";
 import { validationResult } from "express-validator";
-import User from "../models/User.js";
+import {User} from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken'
 

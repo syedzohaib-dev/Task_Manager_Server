@@ -7,6 +7,7 @@ import morgan from "morgan";
 import userRoutes from './src/routes/userRoutes.js'
 import taskRoutes from './src/routes/taskRoutes.js'
 import authRoutes from './src/routes/authRoutes.js'
+import notificationRoutes from './src/routes/notificationRoutes.js'
 
 dotenv.config();
 const app = express();
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/task", taskRoutes);
+app.use("/api/v1/notification", notificationRoutes);
 
 const PORT = process.env.PORT || 5000;
 
