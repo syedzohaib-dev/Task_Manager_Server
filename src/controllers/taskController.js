@@ -255,7 +255,7 @@ export const updateTaskStatus = asyncHandler(async (req, res) => {
 
     const { id } = req.params;
     const { taskStage } = req.body;
-    const allowed = ["ToDo", "InProcess", "Completed"];
+    const allowed = ["ToDo", "InProgress", "Completed"];
 
     if (!allowed.includes(taskStage)) {
         return res.status(400).json(
