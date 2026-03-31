@@ -64,12 +64,12 @@ export const login = asyncHandler(async (req, res) => {
 
     await User.findByIdAndUpdate(user._id, { isActive: true })
 
-    const token = jwt.sign(
+    const token = jwt.sign( 
         { id: user._id, role: user.role },
         process.env.JWT_SECRET,
-        { expiresIn: "7d" }
+        { expiresIn: "5m" }
     );
-
+  
     return res.status(200).json(
         new Apiresponse(
             200,
