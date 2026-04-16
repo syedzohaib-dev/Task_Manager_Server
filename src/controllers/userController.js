@@ -157,7 +157,7 @@ export const verifyOTP = asyncHandler(async (req, res) => {
 export const uploadProfile = asyncHandler(async (req, res) => {
 
     console.log(req.file);
-    const { id } = req.params;
+    const id = req.params.id;
     const user = await User.findById(id);
 
     if (!req.file) {
